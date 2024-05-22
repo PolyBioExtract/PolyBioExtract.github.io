@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8">
   <meta name="description"
-        content="Polymer Sample Search by Attributes">
+        content="Search biodegradable polymer samples by attributes">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Polymer Sample Search by Attributes</title>
+  <title>Biodegradable Polymer Sample Search by Attributes</title>
   <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
         rel="stylesheet">
   <link rel="stylesheet" href="./static/css/bulma.min.css">
@@ -22,42 +22,150 @@
   <script src="./static/js/index.js"></script>
 </head>
 <body>
+
 <section class="hero">
   <div class="hero-body">
     <div class="container is-max-desktop">
       <div class="columns is-centered">
         <div class="column has-text-centered">
-          <h1 class="title is-1 publication-title">Polymer Sample Search by Attributes</h1>
+          <h1 class="title is-1 publication-title">Biodegradable Polymer Sample Search by Attributes</h1>
           <div class="is-size-5 publication-authors">
-            Show me <strong>polymer samples</strong> with the following attributes:
+            Show me <strong>biodegradable polymer samples</strong> with the following attributes:
             <br><br>
-            Polymer Type: 
-            <select>
-              <option>PLA</option>
-              <option>PHA</option>
-              <option>PBS</option>
-              <option>PBAT</option>
-            </select>
-            <br>
-            Substitution Type:
-            <select>
-              <!-- Add options -->
-            </select>
-            <br>
-            Degree of Substitution:
-            <select>
-              <!-- Add options -->
-            </select>
-            <br>
-            Molecular Weight:
-            <select>
-              <!-- Add options -->
-            </select>
+            <form id="search-form">
+              Polymer Type: 
+              <select name="polymer-type" id="polymer-type"></select>
+              <br>
+              Substitution Type:
+              <select name="substitution-type" id="substitution-type"></select>
+              <br>
+              Degree of Substitution:
+              <select name="degree-of-substitution" id="degree-of-substitution"></select>
+              <br>
+              Molecular Weight:
+              <select name="molecular-weight" id="molecular-weight"></select>
+              <br><br>
+              <button type="submit">Search</button>
+            </form>
+            <div id="search-results"></div>
           </div>
         </div>
       </div>
     </div>
   </div>
 </section>
+
+<script>
+  // Assuming the JSON files are located in a folder named "json_files"
+  const jsonDirectory = 'static/json_files';
+
+  // Function to collect unique attribute values from JSON files
+  function collectAttributeValues(jsonFiles) {
+    const attributeValues = {
+      polymerType: new Set(),
+      substitutionType: new Set(),
+      degreeOfSubstitution: new Set(),
+      molecularWeight: new Set()
+    };
+
+    jsonFiles.forEach(file => {
+      const jsonData = JSON.parse(file);
+      attributeValues.polymerType.add(jsonData['Polymer Type']);
+      attributeValues.substitutionType.add(jsonData['Substitution Type']);
+      attributeValues.degreeOfSubstitution.add(jsonData['Degree of Substitution']);
+      attributeValues.molecularWeight.add(jsonData['Molecular weight']);
+    });
+
+    return attributeValues;
+  }
+
+  // Function to populate dropdown menus with attribute values
+  function populateDropdownMenus(attributeValues) {
+    const dropdowns = {
+      polymerType: document.getElementById('polymer-type'),
+      substitutionType: document.getElementById('substitution-type'),
+      degreeOfSubstitution: document.getElementById('degree-of-substitution'),
+      molecularWeight: document.getElementById('molecular-weight')
+    };
+
+    for (const attr in attributeValues) {
+      const dropdown = dropdowns[attr];
+      attributeValues[attr].forEach(value => {
+        const option = document.createElement('option');
+        option.text = value;
+        dropdown.add(option);
+      });
+    }
+  }
+
+  // Function to search JSON files based on selected attribute values
+  function searchPolymerSamples(polymerType, substitutionType, degreeOfSubstitution, molecularWeight) {
+    const results = [];
+
+    jsonFiles.forEach(file => {
+      const jsonData = JSON.parse(file);
+      if (
+        jsonData['Polymer Type'] === polymerType &&
+        jsonData['Substitution Type'] === substitutionType &&
+        jsonData['Degree of Substitution'] === degreeOfSubstitution &&
+        jsonData['Molecular weight'] === molecularWeight
+      ) {
+        results.push(jsonData);
+      }
+    });
+
+    displaySearchResults(results);
+  }
+
+  // Function to display search results
+  function displaySearchResults(results) {
+    const searchResultsDiv = document.getElementById('search-results');
+    searchResultsDiv.innerHTML = '';
+
+    if (results.length === 0) {
+      searchResultsDiv.innerHTML = 'No matching polymer samples found.';
+    } else {
+      const resultsList = document.createElement('ul');
+      results.forEach(result => {
+        const listItem = document.createElement('li');
+        listItem.textContent = JSON.stringify(result);
+        resultsList.appendChild(listItem);
+      });
+      searchResultsDiv.appendChild(resultsList);
+    }
+  }
+
+  // Fetch JSON files from the directory
+  const jsonFiles = [];
+  fetch(jsonDirectory)
+    .then(response => response.text())
+    .then(data => {
+      const fileNames = data.match(/[^<>]+\.json/g);
+      const filePromises = fileNames.map(fileName => fetch(jsonDirectory + fileName).then(response => response.text()));
+      return Promise.all(filePromises);
+    })
+    .then(files => {
+      jsonFiles.push(...files);
+      const attributeValues = collectAttributeValues(jsonFiles);
+      populateDropdownMenus(attributeValues);
+    })
+    .catch(error => {
+      console.error('Error fetching JSON files:', error);
+    });
+
+  // Event listener for form submission
+  document.getElementById('search-form').addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    const polymerType = document.querySelector('select[name="polymer-type"]').value;
+    const substitutionType = document.querySelector('select[name="substitution-type"]').value;
+    const degreeOfSubstitution = document.querySelector('select[name="degree-of-substitution"]').value;
+    const molecularWeight = document.querySelector('select[name="molecular-weight"]').value;
+
+    searchPolymerSamples(polymerType, substitutionType, degreeOfSubstitution, molecularWeight);
+  });
+</script>
+
 </body>
 </html>
+

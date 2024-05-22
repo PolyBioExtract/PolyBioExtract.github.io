@@ -35,6 +35,7 @@
             <form id="search-form">
               Polymer Type: 
               <select name="polymer-type" id="polymer-type">
+                <option value="">-- Skip --</option>
                 <option value="cellulose propionate">cellulose propionate</option>
                 <option value="poly(lactic acid)">poly(lactic acid)</option>
                 <option value="poly(butylene succinate) ">poly(butylene succinate) </option>
@@ -84,6 +85,7 @@
               <br>
               Substitution Type:
               <select name="substitution-type" id="substitution-type">
+                <option value="">-- Skip --</option>
                 <option value="decanoate">decanoate</option>
                 <option value="Octenyl Succinate">Octenyl Succinate</option>
                 <option value="methacrylate">methacrylate</option>
@@ -111,6 +113,7 @@
               <br>
               Degree of Substitution:
               <select name="degree-of-substitution" id="degree-of-substitution">
+                <option value="">-- Skip --</option>
                 <option value="0.45">0.45</option>
                 <option value="0.9">0.9</option>
                 <option value="0.7">0.7</option>
@@ -199,6 +202,60 @@
   </div>
 </section>
 
+<script>
+  // Event listener for form submission
+  document.getElementById('search-form').addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    const polymerType = document.querySelector('select[name="polymer-type"]').value;
+    const substitutionType = document.querySelector('select[name="substitution-type"]').value;
+    const degreeOfSubstitution = document.querySelector('select[name="degree-of-substitution"]').value;
+
+    // Perform search based on selected values
+    searchPolymerSamples(polymerType, substitutionType, degreeOfSubstitution);
+  });
+
+  // Function to search polymer samples based on selected values
+  function searchPolymerSamples(polymerType, substitutionType, degreeOfSubstitution) {
+    const jsonDirectory = './static/json_files/';
+
+    fetch(jsonDirectory)
+      .then(response => response.json())
+      .then(files => {
+        const filteredFiles = files.filter(file => {
+          // Filter conditions
+          const polymerTypeMatch = !polymerType || file['Polymer Type'] === polymerType;
+          const substitutionTypeMatch = !substitutionType || file['Substitution Type'] === substitutionType;
+          const degreeOfSubstitutionMatch = !degreeOfSubstitution || file['Degree of Substitution'] === degreeOfSubstitution;
+
+          return polymerTypeMatch && substitutionTypeMatch && degreeOfSubstitutionMatch;
+        });
+
+        displaySearchResults(filteredFiles);
+      })
+      .catch(error => {
+        console.error('Error fetching JSON files:', error);
+      });
+  }
+
+  // Function to display search results
+  function displaySearchResults(files) {
+    const searchResultsDiv = document.getElementById('search-results');
+    searchResultsDiv.innerHTML = '';
+
+    if (files.length === 0) {
+      searchResultsDiv.innerHTML = 'No matching polymer samples found.';
+    } else {
+      const resultsList = document.createElement('ul');
+      files.forEach(file => {
+        const listItem = document.createElement('li');
+        listItem.textContent = JSON.stringify(file);
+        resultsList.appendChild(listItem);
+      });
+      searchResultsDiv.appendChild(resultsList);
+    }
+  }
+</script>
 </body>
 </html>
 

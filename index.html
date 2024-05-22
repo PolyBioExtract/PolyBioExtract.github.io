@@ -30,7 +30,7 @@
         <div class="column has-text-centered">
           <h1 class="title is-1 publication-title">Biodegradable Polymer Sample Search by Attributes</h1>
           <div class="is-size-5 publication-authors">
-            Show me <strong>biodegradable polymer samples</strong> with the following attributes:
+            Show me biodegradable polymer samples with the following attributes:
             <br><br>
             <form id="search-form">
               Polymer Type: 
@@ -192,49 +192,12 @@
               <br><br>
               <button type="submit">Search</button>
             </form>
-            <div id="search-          </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </section>
-
-<script>
-  // Event listener for form submission
-  document.getElementById('search-form').addEventListener('submit', function(event) {
-    event.preventDefault();
-
-    const polymerType = document.querySelector('select[name="polymer-type"]').value;
-    const substitutionType = document.querySelector('select[name="substitution-type"]').value;
-    const degreeOfSubstitution = document.querySelector('select[name="degree-of-substitution"]').value;
-
-    // Perform search based on selected values
-    searchPolymerSamples(polymerType, substitutionType, degreeOfSubstitution);
-  });
-
-  // Function to search polymer samples based on selected values
-  function searchPolymerSamples(polymerType, substitutionType, degreeOfSubstitution) {
-    // Implement your search logic here based on the selected values
-    console.log('Searching polymer samples with attributes:');
-    console.log('Polymer Type:', polymerType);
-    console.log('Substitution Type:', substitutionType);
-    console.log('Degree of Substitution:', degreeOfSubstitution);
-
-    // Display search results
-    displaySearchResults(polymerType, substitutionType, degreeOfSubstitution);
-  }
-
-  // Function to display search results
-  function displaySearchResults(polymerType, substitutionType, degreeOfSubstitution) {
-    const searchResultsDiv = document.getElementById('search-results');
-    searchResultsDiv.innerHTML = '';
-
-    // Create a message with the selected values
-    const message = `Polymer Type: ${polymerType}<br>Substitution Type: ${substitutionType}<br>Degree of Substitution: ${degreeOfSubstitution}`;
-
-    searchResultsDiv.innerHTML = message;
-  }
-</script>
 
 </body>
 </html>

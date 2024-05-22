@@ -206,6 +206,7 @@
   // Event listener for form submission
   document.getElementById('search-form').addEventListener('submit', function(event) {
     event.preventDefault();
+    console.log('Search form submitted');
 
     const polymerType = document.querySelector('select[name="polymer-type"]').value;
     const substitutionType = document.querySelector('select[name="substitution-type"]').value;
@@ -218,17 +219,20 @@
   // Function to search polymer samples based on selected values
   function searchPolymerSamples(polymerType, substitutionType, degreeOfSubstitution) {
     const jsonDirectory = './static/json_files/';
+    console.log('Searching polymer samples');
 
     // Load the list of JSON files
     fetch(jsonDirectory + 'file_list.json')
       .then(response => response.json())
       .then(fileList => {
+        console.log('File list loaded:', fileList);
         const jsonFiles = fileList.map(fileName => jsonDirectory + fileName);
 
         // Fetch all JSON files
         Promise.all(jsonFiles.map(file => fetch(file)))
           .then(responses => Promise.all(responses.map(response => response.json())))
           .then(data => {
+            console.log('JSON files loaded:', data);
             const filteredFiles = data.filter(file => {
               // Filter conditions
               const polymerTypeMatch = !polymerType || file['Polymer Type'] === polymerType;
@@ -238,6 +242,7 @@
               return polymerTypeMatch && substitutionTypeMatch && degreeOfSubstitutionMatch;
             });
 
+            console.log('Filtered files:', filteredFiles);
             displaySearchResults(filteredFiles);
           })
           .catch(error => {
@@ -251,6 +256,7 @@
 
   // Function to display search results
   function displaySearchResults(files) {
+    console.log('Displaying search results');
     const searchResultsDiv = document.getElementById('search-results');
     searchResultsDiv.innerHTML = '';
 

@@ -219,22 +219,33 @@
   function searchPolymerSamples(polymerType, substitutionType, degreeOfSubstitution) {
     const jsonDirectory = './static/json_files/';
 
-    fetch(jsonDirectory)
+    // Load the list of JSON files
+    fetch(jsonDirectory + 'file_list.json')
       .then(response => response.json())
-      .then(files => {
-        const filteredFiles = files.filter(file => {
-          // Filter conditions
-          const polymerTypeMatch = !polymerType || file['Polymer Type'] === polymerType;
-          const substitutionTypeMatch = !substitutionType || file['Substitution Type'] === substitutionType;
-          const degreeOfSubstitutionMatch = !degreeOfSubstitution || file['Degree of Substitution'] === degreeOfSubstitution;
+      .then(fileList => {
+        const jsonFiles = fileList.map(fileName => jsonDirectory + fileName);
 
-          return polymerTypeMatch && substitutionTypeMatch && degreeOfSubstitutionMatch;
-        });
+        // Fetch all JSON files
+        Promise.all(jsonFiles.map(file => fetch(file)))
+          .then(responses => Promise.all(responses.map(response => response.json())))
+          .then(data => {
+            const filteredFiles = data.filter(file => {
+              // Filter conditions
+              const polymerTypeMatch = !polymerType || file['Polymer Type'] === polymerType;
+              const substitutionTypeMatch = !substitutionType || file['Substitution Type'] === substitutionType;
+              const degreeOfSubstitutionMatch = !degreeOfSubstitution || file['Degree of Substitution'] === degreeOfSubstitution;
 
-        displaySearchResults(filteredFiles);
+              return polymerTypeMatch && substitutionTypeMatch && degreeOfSubstitutionMatch;
+            });
+
+            displaySearchResults(filteredFiles);
+          })
+          .catch(error => {
+            console.error('Error fetching JSON files:', error);
+          });
       })
       .catch(error => {
-        console.error('Error fetching JSON files:', error);
+        console.error('Error fetching file list:', error);
       });
   }
 

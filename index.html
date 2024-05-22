@@ -56,8 +56,8 @@
 </section>
 
 <script>
-  // Assuming the JSON files are located in a folder named "json_files"
-  const jsonDirectory = './static/json_files';
+  // Specify the directory where the JSON files are located
+  const jsonDirectory = './static/json_files/';
 
   // Function to collect unique attribute values from JSON files
   function collectAttributeValues(jsonFiles) {
@@ -69,7 +69,7 @@
     };
 
     jsonFiles.forEach(file => {
-      const jsonData = JSON.parse(file);
+      const jsonData = file;
       attributeValues.polymerType.add(jsonData['Polymer Type']);
       attributeValues.substitutionType.add(jsonData['Substitution Type']);
       attributeValues.degreeOfSubstitution.add(jsonData['Degree of Substitution']);
@@ -103,7 +103,7 @@
     const results = [];
 
     jsonFiles.forEach(file => {
-      const jsonData = JSON.parse(file);
+      const jsonData = file;
       if (
         jsonData['Polymer Type'] === polymerType &&
         jsonData['Substitution Type'] === substitutionType &&
@@ -138,14 +138,9 @@
   // Fetch JSON files from the directory
   const jsonFiles = [];
   fetch(jsonDirectory)
-    .then(response => response.text())
+    .then(response => response.json())
     .then(data => {
-      const fileNames = data.match(/[^<>]+\.json/g);
-      const filePromises = fileNames.map(fileName => fetch(jsonDirectory + fileName).then(response => response.text()));
-      return Promise.all(filePromises);
-    })
-    .then(files => {
-      jsonFiles.push(...files);
+      jsonFiles.push(...data);
       const attributeValues = collectAttributeValues(jsonFiles);
       populateDropdownMenus(attributeValues);
     })

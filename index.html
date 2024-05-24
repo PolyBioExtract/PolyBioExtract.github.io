@@ -294,7 +294,7 @@
               // Filter conditions
               const polymerTypeMatch = !polymerType || file['Polymer Type'] === polymerType;
               const substitutionTypeMatch = !substitutionType || file['Substitution Type'] === substitutionType;
-              const degreeOfSubstitutionMatch = !degreeOfSubstitution || file['Degree of Substitution'] === degreeOfSubstitution;
+              const degreeOfSubstitutionMatch = !degreeOfSubstitution || parseFloat(file['Degree of Substitution']) === parseFloat(degreeOfSubstitution);
               const comonomerTypeMatch = !comonomerType || file['Comonomer Type'] === comonomerType;
               const molecularWeightMatch = !molecularWeight || file['Molecular Weight'] === molecularWeight;
               const degreeOfHydrolysisMatch = !degreeOfHydrolysis || file['Degree of Hydrolysis'] === degreeOfHydrolysis;

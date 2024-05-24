@@ -1,16 +1,1 @@
-{
-    "Polymer Type": "cellulose laurate",
-    "Substitution Type": "laurate",   
-    "Degree of Substitution": "0.2",
-    "Comonomer type": "null",
-    "Degree of hydrolysis": "null",
-    "Molecular weight": "null",
-    "Molecular weight unit": "null",
-    "Biodegradation Test Type": "enzyme",
-    "Biodegradation":{
-        "header": ["Time (days)", "Biodegradation (%)"],
-        "data": [
-            [10,35] ]
-
-}
-}
+{"Polymer Type": "cellulose hexanoate", "Substitution Type": "hexanoate", "Degree of Substitution": "0.4", "Comonomer type": "null", "Degree of hydrolysis": "null", "Molecular weight": "null", "Molecular weight unit": "null", "Biodegradation Test Type": "enzyme", "Biodegradation": {"header": ["Time (days)", "Biodegradation (%)"], "data": [[10, 25]]}, "Paper ID": "pb8"}

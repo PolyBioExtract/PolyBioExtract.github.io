@@ -1,15 +1,1 @@
-{
-    "Polymer Type": "hydroxyethyl cellulose",
-    "Substitution Type": "hydroxyethyl",   
-    "Degree of Substitution": "1.24",
-    "Comonomer type": "null",
-    "Degree of hydrolysis": "null",
-    "Molecular weight": "2,814,665",
-    "Molecular weight unit": "null",
-    "Biodegradation Test Type": "enzyme",
-    "Biodegradation":{
-        "header": ["Time (min)", "Biodegradation (%)"],
-        "data": [
-            [60,2.59]]
-}
-}
+{"Polymer Type": "cellulose", "Substitution Type": "null", "Degree of Substitution": "null", "Comonomer type": "null", "Degree of hydrolysis": "null", "Molecular weight": "null", "Molecular weight unit": "null", "Biodegradation Test Type": "enzyme", "Biodegradation": {"header": ["Time (days)", "Biodegradation (%)"], "data": [[47, 97]]}, "Paper ID": "pb38"}

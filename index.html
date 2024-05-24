@@ -12,6 +12,7 @@
   <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
   <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
   <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet" href="./static/css/display_table.css">
   <link rel="stylesheet"
         href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
   <link rel="stylesheet" href="./static/css/index.css">
@@ -319,17 +320,55 @@
     console.log('Displaying search results');
     const searchResultsDiv = document.getElementById('search-results');
     searchResultsDiv.innerHTML = '';
+    var divElem = document.createElement('div');
+    divElem.setAttribute('class', 'tablewrap');
+    searchResultsDiv.appendChild(divElem);
+    const headers = ['Polymer Type',
+            'Substitution Type',
+            'Degree of Substitution',
+            'Comonomer type',
+            'Degree of hydrolysis',
+            'Molecular weight',
+            'Molecular weight unit',
+            'Biodegradation Test Type',
+            'Biodegradation headers',
+            'Biodegradation data'];
 
     if (files.length === 0) {
       searchResultsDiv.innerHTML = 'No matching polymer samples found.';
     } else {
-      const resultsList = document.createElement('ul');
+      const resultsList = document.createElement('table');
+      const headerRow = document.createElement('tr');
+      headers.forEach(h => {
+        const hItem = document.createElement('th');
+        hItem.textContent = h;
+        headerRow.appendChild(hItem);
+      });
+      resultsList.appendChild(headerRow);
       files.forEach(file => {
-        const listItem = document.createElement('li');
-        listItem.textContent = JSON.stringify(file);
+        const listItem = document.createElement('tr');
+        headers.forEach(h => {
+          const item = document.createElement('td');
+          if (h === 'Biodegradation headers') {
+            item.textContent = file['Biodegradation']['header'];
+          } else if (h === 'Biodegradation data') {
+            const data = file['Biodegradation']['data'];
+            var outData = [];
+            for (let i=0; i<Math.min(data.length, 3); i++) {
+               const x = data[i][0].toFixed(2);
+               const y = data[i][1].toFixed(2);
+               outData.push(String([x, y]));
+            }
+             // const rounded = data.split(",").map((s) => String(parseFloat(s).toFixed(2)));
+            item.textContent = outData.join("\n");
+          } else {
+            item.textContent = file[h];
+          }
+          listItem.appendChild(item);
+        });
         resultsList.appendChild(listItem);
       });
-      searchResultsDiv.appendChild(resultsList);
+      divElem.appendChild(resultsList);
     }
   }
 </script>
